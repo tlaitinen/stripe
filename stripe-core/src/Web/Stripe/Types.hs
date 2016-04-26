@@ -120,6 +120,7 @@ newtype StatementDescription =
 instance FromJSON StatementDescription where
   parseJSON v = StatementDescription <$> parseJSON v
 
+
 ------------------------------------------------------------------------------
 -- | `Charge` object in `Stripe` API
 data Charge = Charge {
@@ -160,7 +161,7 @@ instance FromJSON Charge where
                <*> o .: "amount"
                <*> o .: "currency"
                <*> o .: "refunded"
-               <*> o .: "card"
+               <*> o .: "source"
                <*> o .: "captured"
                <*> o .: "refunds"
                <*> o .:? "balance_transaction"
@@ -393,7 +394,7 @@ data Card = Card {
     , cardFunding           :: Text
     , cardExpMonth          :: ExpMonth
     , cardExpYear           :: ExpYear
-    , cardFingerprint       :: Text
+    , cardFingerprint       :: Maybe Text
     , cardCountry           :: Text
     , cardName              :: Maybe Name
     , cardAddressLine1      :: Maybe AddressLine1
@@ -443,7 +444,7 @@ instance FromJSON Card where
              <*> o .: "funding"
              <*> (ExpMonth <$> o .: "exp_month")
              <*> (ExpYear <$> o .: "exp_year")
-             <*> o .: "fingerprint"
+             <*> o .:? "fingerprint"
              <*> o .: "country"
              <*> o .:? "name"
              <*> (fmap AddressLine1 <$> o .:? "address_line1")
